@@ -257,15 +257,15 @@
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ── EDIT THESE VALUES FOR EACH PERSON ──────────────────────
     const contact = {
-      firstName:  "Jane",
-      lastName:   "Smith",
-      title:      "Marketing Manager",
-      company:    "Your Company",
-      phone:      "5551234567",
-      phoneDisplay: "555-123-4567",
-      email:      "jane@yourcompany.com",
-      website:    "https://yourcompany.com",
-      websiteDisplay: "yourcompany.com"
+      firstName:  "Doug",
+      lastName:   "Jamieson",
+      title:      "Business Development Manager",
+      company:    "Applied Industrial Technologies",
+      phone:      "2502280449",
+      phoneDisplay: "250-228-0449",
+      email:      "dougj@applied.com",
+      website:    "https://appliedcanada.ca",
+      websiteDisplay: "appliedcanada.ca"
     };
     // ────────────────────────────────────────────────────────────
 
