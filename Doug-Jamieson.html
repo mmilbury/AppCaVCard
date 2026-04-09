@@ -299,4 +299,11 @@
       "END:VCARD"
     ].join("\n");
 
-    const blob = new Blob([vcard
+    const blob = new Blob([vcard], { type: "text/vcard" });
+    const url  = URL.createObjectURL(blob);
+    const btn  = document.getElementById('vcardBtn');
+    btn.href     = url;
+    btn.download = `${contact.firstName}-${contact.lastName}.vcf`;
+  </script>
+</body>
+</html>
