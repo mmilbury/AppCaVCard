@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jane Smith – Your Company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #201c52;
+      --card: #ffffff;
+      --accent: #007b85;
+      --accent-soft: rgba(0,123,133,0.1);
+      --text: #201c52;
+      --muted: #6b6896;
+      --border: rgba(0,123,133,0.2);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image: radial-gradient(ellipse at 20% 50%, rgba(0,123,133,0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      max-width: 420px;
+      width: 100%;
+      padding: 48px 36px 36px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .company {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 28px;
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .detail-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .detail-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .detail-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1px;
+    }
+
+    .detail-value {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .detail-value a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .detail-value a:hover {
+      color: var(--accent);
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar" id="initials">JS</div>
+    <div class="title" id="jobTitle">Marketing Manager</div>
+    <div class="name" id="fullName">Jane Smith</div>
+    <div class="company" id="orgName">Your Company</div>
+
+    <div class="divider"></div>
+
+    <div class="details">
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .91h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Phone</span>
+          <span class="detail-value"><a href="tel:5551234567" id="phoneLink">555-123-4567</a></span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Email</span>
+          <span class="detail-value"><a href="mailto:jane@yourcompany.com" id="emailLink">jane@yourcompany.com</a></span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Website</span>
+          <span class="detail-value"><a href="https://yourcompany.com" id="webLink" target="_blank">yourcompany.com</a></span>
+        </div>
+      </div>
+
+      <!-- Address row — hidden by default, shows only if address is filled in -->
+      <div class="detail-row" id="addressRow" style="display:none">
+        <div class="detail-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Address</span>
+          <span class="detail-value" id="addressValue"></span>
+        </div>
+      </div>
+    </div>
+
+    <a class="btn" id="vcardBtn" href="#" download>
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Save Contact
+    </a>
+  </div>
+
+  <script>
+    // ── EDIT THESE VALUES FOR EACH PERSON ──────────────────────
+    const contact = {
+      firstName:      "Jane",
+      lastName:       "Smith",
+      title:          "Marketing Manager",
+      company:        "Your Company",
+      phone:          "5551234567",
+      phoneDisplay:   "555-123-4567",
+      email:          "jane@yourcompany.com",
+      website:        "https://yourcompany.com",
+      websiteDisplay: "yourcompany.com",
+      // Address is optional — leave as "" to hide it completely
+      address:        ""
+      // Example with address filled in:
+      // address: "123 Main Street, Vancouver, BC V6B 1A1"
+    };
+    // ────────────────────────────────────────────────────────────
+
+    // Populate page
+    const fullName = `${contact.firstName} ${contact.lastName}`;
+    const initials = `${contact.firstName[0]}${contact.lastName[0]}`;
+
+    document.getElementById('initials').textContent   = initials;
+    document.getElementById('fullName').textContent   = fullName;
+    document.getElementById('jobTitle').textContent   = contact.title;
+    document.getElementById('orgName').textContent    = contact.company;
+    document.getElementById('phoneLink').textContent  = contact.phoneDisplay;
+    document.getElementById('phoneLink').href         = `tel:${contact.phone}`;
+    document.getElementById('emailLink').textContent  = contact.email;
+    document.getElementById('emailLink').href         = `mailto:${contact.email}`;
+    document.getElementById('webLink').textContent    = contact.websiteDisplay;
+    document.getElementById('webLink').href           = contact.website;
+    document.title = `${fullName} – ${contact.company}`;
+
+    // Show address only if provided
+    if (contact.address) {
+      document.getElementById('addressRow').style.display = 'flex';
+      document.getElementById('addressValue').textContent = contact.address;
+    }
+
+    // Build vCard and wire up button
+    const vcardLines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `FN:${fullName}`,
+      `N:${contact.lastName};${contact.firstName};;;`,
+      `ORG:${contact.company}`,
+      `TITLE:${contact.title}`,
+      `TEL;TYPE=WORK,VOICE:${contact.phone}`,
+      `EMAIL;TYPE=WORK:${contact.email}`,
+      `URL:${contact.website}`,
+    ];
+
+    // Add address to vCard only if provided
+    if (contact.address) {
+      vcardLines.push(`ADR;TYPE=WORK:;;${contact.address};;;;`);
+    }
+
+    vcardLines.push("END:VCARD");
+
+    const vcard = vcardLines.join("\n");
+    const blob  = new Blob([vcard], { type: "text/vcard" });
+    const url   = URL.createObjectURL(blob);
+    const btn   = document.getElementById('vcardBtn');
+    btn.href     = url;
+    btn.download = `${contact.firstName}-${contact.lastName}.vcf`;
+  </script>
+</body>
+</html>
