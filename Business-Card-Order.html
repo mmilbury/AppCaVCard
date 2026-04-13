@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Card Order — Applied Industrial Technologies</title>
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a1a;
+    --ink-2: #555;
+    --ink-3: #999;
+    --rule: #e0e0e0;
+    --surface: #fff;
+    --page: #f5f4f1;
+    --accent: #c8391a;
+    --accent-light: #fdf1ee;
+    --accent-border: #f0c4ba;
+    --success: #1a6b3c;
+    --success-light: #edf7f2;
+    --radius: 6px;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--page);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .page-header {
+    background: var(--ink);
+    color: #fff;
+    padding: 24px 40px;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .page-header h1 { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
+  .page-header span { font-size: 12px; color: #888; font-family: var(--mono); }
+
+  .layout { display: grid; grid-template-columns: 420px 1fr; gap: 0; min-height: calc(100vh - 65px); }
+
+  .panel-left {
+    background: var(--surface);
+    border-right: 1px solid var(--rule);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .panel-right {
+    padding: 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 14px; }
+  .field-group-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 11px; font-weight: 500; color: var(--ink-2); letter-spacing: 0.02em; }
+  .field input, .field textarea {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--page);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    transition: border-color 0.15s, background 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  .field input:focus, .field textarea:focus {
+    border-color: var(--ink-2);
+    background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 52px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-add {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    width: 100%;
+  }
+  .btn-add:hover { background: #333; }
+  .btn-add:active { transform: scale(0.99); }
+
+  .btn-clear {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 0;
+    text-align: center;
+  }
+  .btn-clear:hover { color: var(--ink-2); }
+
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .batch-info { display: flex; flex-direction: column; gap: 2px; }
+  .batch-count { font-size: 22px; font-weight: 300; color: var(--ink); font-family: var(--mono); }
+  .batch-label { font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .btn-download {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, opacity 0.15s;
+  }
+  .btn-download:hover:not(:disabled) { background: #b02e13; }
+  .btn-download:active:not(:disabled) { transform: scale(0.99); }
+  .btn-download:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .order-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--ink-3);
+    border: 1.5px dashed var(--rule);
+    border-radius: 8px;
+    padding: 48px;
+    text-align: center;
+    min-height: 200px;
+  }
+  .order-empty .icon { font-size: 28px; opacity: 0.4; }
+  .order-empty p { font-size: 13px; }
+
+  .order-cards { display: flex; flex-direction: column; gap: 10px; }
+
+  .order-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+    animation: slideIn 0.2s ease;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .order-card-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+  .order-card-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .order-card-pos { font-size: 12px; color: var(--ink-2); margin-bottom: 8px; }
+  .order-card-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    background: var(--page);
+    color: var(--ink-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .tag.qty { background: var(--accent-light); color: var(--accent); border-color: var(--accent-border); }
+  .tag.cc { background: #f0f4ff; color: #2a4baa; border-color: #c5d0f5; }
+
+  .btn-remove {
+    background: none;
+    border: none;
+    color: var(--ink-3);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.1s;
+  }
+  .btn-remove:hover { color: var(--accent); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--success);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 780px) {
+    .layout { grid-template-columns: 1fr; }
+    .panel-left { border-right: none; border-bottom: 1px solid var(--rule); }
+    .page-header { padding: 18px 20px; }
+    .panel-left, .panel-right { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Business Card Orders</h1>
+  <span>Applied Industrial Technologies</span>
+</header>
+
+<div class="layout">
+  <aside class="panel-left">
+
+    <div class="field-group">
+      <div class="field-group-title">Batch info</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Organization</label>
+          <input id="forg" value="Applied Industrial Technologies" />
+        </div>
+        <div class="field">
+          <label>Week of</label>
+          <input id="fweek" id="fweek" />
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-group-title">Card details</div>
+      <div class="field">
+        <label>Full name</label>
+        <input id="fname" placeholder="e.g. Jane Smith" />
+      </div>
+      <div class="field">
+        <label>Job title / position</label>
+        <input id="fpos" placeholder="e.g. Regional Sales Manager" />
+      </div>
+      <div class="field">
+        <label>Address</label>
+        <input id="faddr" placeholder="e.g. 5511 48th Street NW, Edmonton, AB" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Phone</label>
+          <input id="fphone" placeholder="780-000-0000" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="femail" placeholder="name@applied.com" />
+        </div>
+      </div>
+      <div class="field">
+        <label>QR code filename</label>
+        <input id="fqr" placeholder="e.g. Jane Smith QR Code.svg" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Quantity</label>
+          <input id="fqty" placeholder="e.g. 250" />
+        </div>
+        <div class="field">
+          <label>Cost centre</label>
+          <input id="fcc" placeholder="e.g. 4138" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="fnotes" placeholder="e.g. Rush order, matte finish, etc."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-add" onclick="addPerson()">+ Add to batch</button>
+    <button class="btn-clear" onclick="clearForm()">Clear form</button>
+
+  </aside>
+
+  <main class="panel-right">
+    <div class="right-header">
+      <div class="batch-info">
+        <div class="batch-count" id="count">0</div>
+        <div class="batch-label">cards in batch</div>
+      </div>
+      <button class="btn-download" id="dl-btn" onclick="generateDoc()" disabled>Download order doc</button>
+    </div>
+    <div id="list-wrap">
+      <div class="order-empty">
+        <div class="icon">☐</div>
+        <p>No cards added yet.<br>Fill in the form and click "Add to batch".</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Order doc downloaded!</div>
+
+<script>
+const orders = [];
+
+document.getElementById('fweek').value = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+function val(id) { return document.getElementById(id).value.trim(); }
+
+function addPerson() {
+  const name = val('fname');
+  if (!name) { document.getElementById('fname').focus(); return; }
+  orders.push({
+    name,
+    position:   val('fpos'),
+    address:    val('faddr'),
+    phone:      val('fphone'),
+    email:      val('femail'),
+    qrFile:     val('fqr'),
+    qty:        val('fqty'),
+    costCentre: val('fcc'),
+    notes:      val('fnotes'),
+    id: Date.now()
+  });
+  clearForm();
+  render();
+}
+
+function clearForm() {
+  ['fname','fpos','faddr','fphone','femail','fqr','fqty','fcc','fnotes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fname').focus();
+}
+
+function removeOrder(id) {
+  const i = orders.findIndex(o => o.id === id);
+  if (i > -1) orders.splice(i, 1);
+  render();
+}
+
+function render() {
+  document.getElementById('count').textContent = orders.length;
+  document.getElementById('dl-btn').disabled = orders.length === 0;
+  const wrap = document.getElementById('list-wrap');
+  if (orders.length === 0) {
+    wrap.innerHTML = `<div class="order-empty"><div class="icon">☐</div><p>No cards added yet.<br>Fill in the form and click "Add to batch".</p></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="order-cards">${orders.map((o, i) => `
+    <div class="order-card">
+      <div>
+        <div class="order-card-num">CARD ${String(i+1).padStart(2,'0')}</div>
+        <div class="order-card-name">${o.name}</div>
+        <div class="order-card-pos">${o.position || '—'}</div>
+        <div class="order-card-meta">
+          ${o.phone      ? `<span class="tag">${o.phone}</span>` : ''}
+          ${o.email      ? `<span class="tag">${o.email}</span>` : ''}
+          ${o.qty        ? `<span class="tag qty">Qty: ${o.qty}</span>` : ''}
+          ${o.costCentre ? `<span class="tag cc">CC: ${o.costCentre}</span>` : ''}
+          ${o.qrFile     ? `<span class="tag">${o.qrFile}</span>` : ''}
+          ${o.notes      ? `<span class="tag">${o.notes}</span>` : ''}
+        </div>
+      </div>
+      <button class="btn-remove" onclick="removeOrder(${o.id})">×</button>
+    </div>`).join('')}</div>`;
+}
+
+async function generateDoc() {
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+          AlignmentType, BorderStyle, WidthType, ShadingType } = docx;
+
+  const orgName = val('forg') || 'Business Card Order';
+  const weekOf  = val('fweek') || new Date().toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+
+  const bdr = { style: BorderStyle.SINGLE, size: 1, color: 'CCCCCC' };
+  const borders = { top: bdr, bottom: bdr, left: bdr, right: bdr };
+
+  function row(label, value) {
+    return new TableRow({ children: [
+      new TableCell({
+        borders,
+        width: { size: 2200, type: WidthType.DXA },
+        shading: { fill: 'F4F4F4', type: ShadingType.CLEAR },
+        margins: { top: 70, bottom: 70, left: 120, right: 120 },
+        children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, size: 20, font: 'Arial' })] })]
+      }),
+      new TableCell({
+        borders,
+        width: { size: 7160, type: WidthType.DXA },
+        margins: { top: 70, bottom: 70, left: 120, right: 120 },
+        children: [new Paragraph({ children: [new TextRun({ text: value || '—', size: 20, font: 'Arial' })] })]
+      })
+    ]});
+  }
+
+  function cardSection(o, i) {
+    const rows = [
+      row('Full name',      o.name),
+      row('Job title',      o.position),
+      row('Address',        o.address),
+      row('Phone',          o.phone),
+      row('Email',          o.email),
+      row('QR code file',   o.qrFile),
+      row('Quantity',       o.qty),
+      row('Cost centre',    o.costCentre),
+    ];
+    if (o.notes) rows.push(row('Notes', o.notes));
+    return [
+      new Paragraph({
+        children: [new TextRun({ text: `Card ${i+1} — ${o.name}`, bold: true, size: 24, font: 'Arial' })],
+        spacing: { before: i === 0 ? 0 : 400, after: 120 },
+        border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'BBBBBB', space: 1 } }
+      }),
+      new Table({ width: { size: 9360, type: WidthType.DXA }, columnWidths: [2200, 7160], rows })
+    ];
+  }
+
+  const doc = new Document({
+    sections: [{
+      properties: { page: {
+        size: { width: 12240, height: 15840 },
+        margin: { top: 1080, right: 1080, bottom: 1080, left: 1080 }
+      }},
+      children: [
+        new Paragraph({ children: [new TextRun({ text: orgName, bold: true, size: 32, font: 'Arial' })], spacing: { after: 80 } }),
+        new Paragraph({ children: [
+          new TextRun({ text: 'Week of: ', size: 22, font: 'Arial', color: '666666' }),
+          new TextRun({ text: weekOf, size: 22, font: 'Arial' }),
+          new TextRun({ text: '     Total cards: ', size: 22, font: 'Arial', color: '666666' }),
+          new TextRun({ text: String(orders.length), size: 22, font: 'Arial' }),
+        ], spacing: { after: 80 } }),
+        new Paragraph({
+          children: [new TextRun({ text: 'Please print business cards for each person listed below. QR code image files are attached and named per the QR code file field.', size: 20, font: 'Arial', color: '444444' })],
+          spacing: { after: 400 },
+          border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: '444444', space: 4 } }
+        }),
+        ...orders.flatMap((o, i) => cardSection(o, i)),
+        new Paragraph({
+          children: [new TextRun({ text: 'End of order', size: 18, font: 'Arial', color: '999999', italics: true })],
+          spacing: { before: 480 },
+          alignment: AlignmentType.CENTER
+        })
+      ]
+    }]
+  });
+
+  const buf = await Packer.toBuffer(doc);
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = weekOf.replace(/,?\s+/g, '_');
+  a.href = url;
+  a.download = `Business_Card_Order_${dateStr}.docx`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
